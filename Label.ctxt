@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=Label
+comment0.text=\r\n\ A\ Label\ class\ that\ allows\ you\ to\ display\ a\ textual\ value\ on\ screen.\r\n
+comment1.params=text\ fontSize
+comment1.target=Label(java.lang.String,\ int)
+comment2.params=value
+comment2.target=void\ setValue(java.lang.String)
+comment3.params=
+comment3.target=void\ updateImage()
+numComments=4

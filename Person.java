@@ -3,91 +3,84 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class Person here.
  * 
- * @author (your name) 
+ * @your_name (your name) 
  * @version (a version number or a date)
  */
-public class Person extends Actor
-{
-    /**
-     * Act - do whatever the Person wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-     
-    public void act()
-    {
+public class Person extends Actor {
+    public void act() {
         // Add your action code here.
         moveAround();
         hitEnemy();
         hitFood();
+        hitBomb(); // Check for bomb collision
     }
-    public boolean hitHome(){
-       if(isTouching(Home.class)){
-           return true;
-       }
-       else{
-        return false;
-        }
+    
+    public boolean hitHome() {
+        return isTouching(Home.class);
     }
-    public boolean hitWall(){
-       if(isTouching(Wall.class)){
-           return true;
-       }
-       else{
-        return false;
-        }
+    
+    public boolean hitWall() {
+        return isTouching(Wall.class);
     }
-    public void hitEnemy(){
-       Actor apple = getOneIntersectingObject(Enemy.class);
-       if(apple != null){
-           getWorld().removeObject(apple);
-           MyWorld.score--;
-        }
-       
-    }
-    public void hitFood(){
-       Actor food = getOneIntersectingObject(Food.class);
-       if(food != null){
-           getWorld().removeObject(food);
-           MyWorld.score++;
-        }
-       
-    }
-    public boolean hitEdge(){
-        int getX = getX();
-        int getY = getY();
-        if(getX <= 10|| getX >=590|| getY <= 15|| getY >= 585  ){
-            return true;
-        }
-        else{
-            return false;
+    
+    public void hitEnemy() {
+        Actor enemy = getOneIntersectingObject(Enemy.class);
+        if (enemy != null) {
+            getWorld().removeObject(enemy);
+            MyWorld.score--;
         }
     }
     
+    public void hitFood() {
+        Actor food = getOneIntersectingObject(Food.class);
+        if (food != null) {
+            getWorld().removeObject(food);
+            MyWorld.score++;
+        }
+    }
     
-    public void moveAround(){
-        if(Greenfoot.isKeyDown("up")){
-            setLocation(getX(), getY()-1);
-            if(hitWall() == true || hitEdge() == true){
-                setLocation(getX(), getY()+2);
-            }
-            if(hitHome() == true){
+    public void hitBomb() {
+        Actor bomb = getOneIntersectingObject(Bomb.class);
+        if (bomb != null) {
+            Greenfoot.stop(); // End the game
+            getWorld().showText("Game Over", getWorld().getWidth() / 2, getWorld().getHeight() / 2);
+        }
+    }
+    
+    public boolean hitEdge() {
+        int x = getX();
+        int y = getY();
+        return x <= 10 || x >= 790 || y <= 15 || y >= 785;
+    }
+    
+    public void moveAround() {
+        int dx = 0;
+        int dy = 0;
+        
+        if (Greenfoot.isKeyDown("up")) {
+            dy = -1;
+        }
+        if (Greenfoot.isKeyDown("down")) {
+            dy = 1;
+        }
+        if (Greenfoot.isKeyDown("right")) {
+            dx = 1;
+        }
+        if (Greenfoot.isKeyDown("left")) {
+            dx = -1;
+        }
+        
+        if (dx != 0 || dy != 0) {
+            int oldX = getX();
+            int oldY = getY();
+            setLocation(oldX + dx, oldY + dy);
+            
+            if (hitWall() || hitEdge()) {
+                setLocation(oldX, oldY);
+            } else if (hitHome()) {
                 World level2 = new FishWorld();
                 Greenfoot.setWorld(level2);
             }
-        }
-        if(Greenfoot.isKeyDown("down")){
-            setLocation(getX(), getY()+1);
-            
-            
-        }
-        if(Greenfoot.isKeyDown("right")){
-            setLocation(getX()+1, getY());
-            
-            
-        }
-        if(Greenfoot.isKeyDown("left")){
-            setLocation(getX()-1, getY());
-            
         }
     }
 }
